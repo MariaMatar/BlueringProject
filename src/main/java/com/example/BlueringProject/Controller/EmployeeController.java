@@ -58,6 +58,11 @@ import java.util.List;
             return new ResponseEntity <> (HttpStatus.NO_CONTENT);
         }
 
-
+    //build delete all employees Rest Api
+    @DeleteMapping
+    public ResponseEntity <EmployeeEntity> deleteAllEmployees() {
+        employeeRepository.deleteAll();
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
     }
 
