@@ -4,6 +4,7 @@ package com.example.BlueringProject.Controller;
 import com.example.BlueringProject.Entities.EmployeeEntity;
 import com.example.BlueringProject.Repositories.EmployeeRepository;
 import com.example.BlueringProject.Services.EmployeeService;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
