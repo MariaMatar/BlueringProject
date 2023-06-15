@@ -5,12 +5,17 @@ import com.example.BlueringProject.Repositories.EmployeeRepository;
 import com.example.BlueringProject.DTO.EmployeeDTO;
 import com.example.BlueringProject.Mapper.EmployeeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.ReflectionUtils;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
-public class EmployeeServiceImpl implements EmployeeService{
+public class EmployeeServiceImpl implements EmployeeService {
 
 
     private final EmployeeRepository employeeRepository;
@@ -25,7 +30,7 @@ public class EmployeeServiceImpl implements EmployeeService{
     }
 
     public List<EmployeeEntity> getAllEmployees() {
-        return  employeeRepository.findAll();
+        return employeeRepository.findAll();
     }
 
     public void deleteEmployeeById(int id) {
@@ -37,6 +42,7 @@ public class EmployeeServiceImpl implements EmployeeService{
         EmployeeEntity savedEmployeeEntity = employeeRepository.save(employeeEntity);
         return EmployeeMapper.toDTO(savedEmployeeEntity);
     }
+
     public EmployeeDTO update(EmployeeDTO employeeDTO) {
         Optional<EmployeeEntity> optionalEmployeeEntity = employeeRepository.findById(employeeDTO.getId());
         if (optionalEmployeeEntity.isPresent()) {
@@ -70,4 +76,112 @@ public class EmployeeServiceImpl implements EmployeeService{
         return EmployeeMapper.toDTOList(employeeEntities);
     }
 
+    public void updateEntity(Map<String, Object> entityDTO, Object entityToUpdate, Class entityToUpdateClass) {
+        // Map key is field name, v is value
+        entityDTO.forEach((k, v) -> {
+            // use reflection to get field k on entityToUpdate and set it to value k
+            Field field = ReflectionUtils.findRequiredField(entityToUpdateClass, k);
+            field.setAccessible(true);
+            ReflectionUtils.setField(field, entityToUpdate, v);
+
+        });
+
+    }
+
+    @Override
+    public ResponseEntity<EmployeeEntity> updateEntity(int id, Map<String, Object> employeeDTO) {
+        EmployeeEntity entityToUpdate = employeeRepository.findById(id).orElseThrow();
+        Class entityToUpdateClass = EmployeeEntity.class;
+        updateEntity(employeeDTO, entityToUpdate, entityToUpdateClass);
+        employeeRepository.saveAndFlush(entityToUpdate);
+        return ResponseEntity.ok(entityToUpdate);
+    }
+
+    public void deleteEntity(Map<String, Object> entityDTO, Object entityToDelete, Class entityToDeleteClass) {
+        // Map key is field name, v is value
+        entityDTO.forEach((k, v) -> {
+            // use reflection to get field k on entityToUpdate and set it to value k
+            Field field = ReflectionUtils.findRequiredField(entityToDeleteClass, k);
+            field.setAccessible(true);
+            ReflectionUtils.setField(field, entityToDelete, v);
+
+        });
+    }
+
+    @Override
+    public ResponseEntity<EmployeeEntity> deleteEntity(int id, Map<String, Object> employeeDTO) {
+        EmployeeEntity entityToDelete = employeeRepository.findById(id).orElseThrow();
+        Class entityToDeleteClass = EmployeeEntity.class;
+        deleteEntity(employeeDTO, entityToDelete, entityToDeleteClass);
+        employeeRepository.saveAndFlush(entityToDelete);
+        return ResponseEntity.ok(entityToDelete);
+    }
+
+    public void getEntity(Map<String, Object> entityDTO, Object entityToGet, Class entityToGetClass) {
+        // Map key is field name, v is value
+        entityDTO.forEach((k, v) -> {
+            // use reflection to get field k on entityToUpdate and set it to value k
+            Field field = ReflectionUtils.findRequiredField(entityToGetClass, k);
+            field.setAccessible(true);
+            ReflectionUtils.setField(field, entityToGet, v);
+
+        });
+
+    }
+
+    @Override
+    public ResponseEntity<EmployeeEntity> getEntity(int id, Map<String, Object> employeeDTO) {
+        EmployeeEntity entityToGet = employeeRepository.findById(id).orElseThrow();
+        Class entityToGetClass = EmployeeEntity.class;
+        getEntity(employeeDTO, entityToGet, entityToGetClass);
+        employeeRepository.saveAndFlush(entityToGet);
+        return ResponseEntity.ok(entityToGet);
+    }
+
+
+    public void getAllEntity(Map<String, Object> entityDTO, Object entityToGetAll, Class entityToGetAllClass) {
+        // Map key is field name, v is value
+        entityDTO.forEach((k, v) -> {
+            // use reflection to get field k on entityToUpdate and set it to value k
+            Field field = ReflectionUtils.findRequiredField(entityToGetAllClass, k);
+            field.setAccessible(true);
+            ReflectionUtils.setField(field, entityToGetAll, v);
+
+        });
+
+    }
+
+    @Override
+    public ResponseEntity<EmployeeEntity> getAllEntity(int id, Map<String, Object> employeeDTO) {
+        EmployeeEntity entityToGetAll = employeeRepository.findById(id).orElseThrow();
+        Class entityToGetAllClass = EmployeeEntity.class;
+        getAllEntity(employeeDTO, entityToGetAll, entityToGetAllClass);
+        employeeRepository.saveAndFlush(entityToGetAll);
+        return ResponseEntity.ok(entityToGetAll);
+    }
+
+
+    public void createEntity(Map<String, Object> entityDTO, Object entityToCreate, Class entityToCreateClass) {
+        // Map key is field name, v is value
+        entityDTO.forEach((k, v) -> {
+            // use reflection to get field k on entityToUpdate and set it to value k
+            Field field = ReflectionUtils.findRequiredField(entityToCreateClass, k);
+            field.setAccessible(true);
+            ReflectionUtils.setField(field, entityToCreate, v);
+
+        });
+
+    }
+
+    @Override
+    public ResponseEntity<EmployeeEntity> createEntity(int id, Map<String, Object> employeeDTO) {
+        EmployeeEntity entityToCreate = employeeRepository.findById(id).orElseThrow();
+        Class entityToCreateClass = EmployeeEntity.class;
+        createEntity(employeeDTO, entityToCreate, entityToCreateClass);
+        employeeRepository.saveAndFlush(entityToCreate);
+        return ResponseEntity.ok(entityToCreate);
+    }
+
+
 }
+
