@@ -6,6 +6,7 @@ import com.example.BlueringProject.DTO.EmployeeDTO;
 import com.example.BlueringProject.Mapper.EmployeeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.ReflectionUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -97,25 +98,22 @@ public class EmployeeServiceImpl implements EmployeeService {
         return ResponseEntity.ok(entityToUpdate);
     }
 
-    public void deleteEntity(Map<String, Object> entityDTO, Object entityToDelete, Class entityToDeleteClass) {
-        // Map key is field name, v is value
-        entityDTO.forEach((k, v) -> {
-            // use reflection to get field k on entityToUpdate and set it to value k
-            Field field = ReflectionUtils.findRequiredField(entityToDeleteClass, k);
-            field.setAccessible(true);
-            ReflectionUtils.setField(field, entityToDelete, v);
 
-        });
+    public void deleteEntity(Object entityToDelete, Class entityToDeleteClass) throws IllegalAccessException {
+        Field idField = ReflectionUtils.findRequiredField(entityToDeleteClass, "id");
+        idField.setAccessible(true);
+        Object idValue = idField.get(entityToDelete);
+        EmployeeService.deleteById((Long) idValue);
+
     }
 
     @Override
-    public ResponseEntity<EmployeeEntity> deleteEntity(int id, Map<String, Object> employeeDTO) {
+    public ResponseEntity<EmployeeEntity> deleteEntity(int id) throws IllegalAccessException {
         EmployeeEntity entityToDelete = employeeRepository.findById(id).orElseThrow();
-        Class entityToDeleteClass = EmployeeEntity.class;
-        deleteEntity(employeeDTO, entityToDelete, entityToDeleteClass);
-        employeeRepository.saveAndFlush(entityToDelete);
+        employeeRepository.delete(entityToDelete);
         return ResponseEntity.ok(entityToDelete);
     }
+
 
     public void getEntity(Map<String, Object> entityDTO, Object entityToGet, Class entityToGetClass) {
         // Map key is field name, v is value
@@ -161,27 +159,23 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
 
-    public void createEntity(Map<String, Object> entityDTO, Object entityToCreate, Class entityToCreateClass) {
-        // Map key is field name, v is value
+    public void createEntity(Map<String, Object> entityDTO, Object entityToCreate, Class entityToCreateClass) throws IllegalAccessException {
         entityDTO.forEach((k, v) -> {
-            // use reflection to get field k on entityToUpdate and set it to value k
             Field field = ReflectionUtils.findRequiredField(entityToCreateClass, k);
             field.setAccessible(true);
             ReflectionUtils.setField(field, entityToCreate, v);
-
         });
-
     }
+
 
     @Override
-    public ResponseEntity<EmployeeEntity> createEntity(int id, Map<String, Object> employeeDTO) {
-        EmployeeEntity entityToCreate = employeeRepository.findById(id).orElseThrow();
-        Class entityToCreateClass = EmployeeEntity.class;
+    public ResponseEntity<EmployeeEntity> createEntity(Map<String, Object> employeeDTO) throws IllegalAccessException {
+        EmployeeEntity entityToCreate = new EmployeeEntity();
+        Class<EmployeeEntity> entityToCreateClass = EmployeeEntity.class;
         createEntity(employeeDTO, entityToCreate, entityToCreateClass);
         employeeRepository.saveAndFlush(entityToCreate);
-        return ResponseEntity.ok(entityToCreate);
+        return ResponseEntity.status(HttpStatus.CREATED).body(entityToCreate);
     }
-
 
 }
 

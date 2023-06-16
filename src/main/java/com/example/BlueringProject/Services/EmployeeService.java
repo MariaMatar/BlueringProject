@@ -9,6 +9,9 @@ import java.util.Map;
 
 public interface EmployeeService {
 
+    static void deleteById(Long idValue) {
+    }
+
     EmployeeDTO create(EmployeeDTO employeeDTO);
 
     EmployeeDTO update(EmployeeDTO employeeDTO);
@@ -19,16 +22,16 @@ public interface EmployeeService {
 
     List<EmployeeDTO> getAll();
 
+    ResponseEntity<EmployeeEntity> deleteEntity(int id) throws IllegalAccessException;
+
     ResponseEntity<EmployeeEntity> getEntity(int id, Map<String, Object> employeeDTO);
 
     ResponseEntity<EmployeeEntity> getAllEntity(int id, Map<String, Object> employeeDTO);
 
     ResponseEntity<EmployeeEntity> updateEntity(int id, Map<String, Object> employeeDTO);
 
-    ResponseEntity<EmployeeEntity> deleteEntity(int id, Map<String, Object> employeeDTO);
 
-    ResponseEntity<EmployeeEntity> createEntity(int id, Map<String, Object> employeeDTO);
-
+    ResponseEntity<EmployeeEntity> createEntity(Map<String, Object> employeeDTO) throws IllegalAccessException;
 
 }
 

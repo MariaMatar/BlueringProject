@@ -33,9 +33,9 @@ public class EmployeeController {
 
 
     @PostMapping
-    public ResponseEntity<EmployeeEntity> createEmployee(@PathVariable int id, @RequestBody Map<String, Object> employeeDetails) {
+    public ResponseEntity<EmployeeEntity> createEmployee(@RequestBody Map<String, Object> employeeDetails) throws IllegalAccessException {
 
-        return employeeService.createEntity(id, employeeDetails);
+        return employeeService.createEntity(employeeDetails);
     }
 
 
@@ -56,8 +56,8 @@ public class EmployeeController {
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<EmployeeEntity> deleteEmployee(@PathVariable int id, @RequestBody Map<String, Object> employeeDetails) {
-        return employeeService.deleteEntity(id, employeeDetails);
+    public ResponseEntity<EmployeeEntity> deleteEmployee(@PathVariable int id) throws IllegalAccessException {
+        return employeeService.deleteEntity(id);
     }
 }
 
