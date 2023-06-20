@@ -7,19 +7,20 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+
 @SpringBootApplication
 public class BlueringProjectApplication implements CommandLineRunner {
 
-	public static void main(String[] args) {
-		SpringApplication.run(BlueringProjectApplication.class, args);
+    public static void main(String[] args) {
+        SpringApplication.run(BlueringProjectApplication.class, args);
 
-	}
+    }
 
-	@Autowired
-	private EmployeeRepository employeeRepository;
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
-	@Override
-	public void run(String... args) throws Exception {
+    @Override
+    public void run(String... args) throws Exception {
 
 //		EmployeeEntity employee1 = new EmployeeEntity();
 //		employee1.setFirstName("Maria");
@@ -55,5 +56,5 @@ public class BlueringProjectApplication implements CommandLineRunner {
 //		employee5.setAddress("North");
 //		employee5.setPhoneNumber(Integer.valueOf(70123456));
 //		employeeRepository.save(employee5);
-	}
+    }
 }

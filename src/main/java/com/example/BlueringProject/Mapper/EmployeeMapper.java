@@ -4,23 +4,27 @@ import com.example.BlueringProject.Entities.EmployeeEntity;
 import com.example.BlueringProject.DTO.EmployeeDTO;
 import com.example.BlueringProject.DTO.LeavesDTO;
 import com.example.BlueringProject.Entities.LeavesEntity;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
+@Component
 public class EmployeeMapper {
 
-    public static EmployeeDTO toDTO(EmployeeEntity entity) {
+    public static EmployeeDTO toDTO(EmployeeEntity employeeentity) {
         EmployeeDTO dto = new EmployeeDTO();
-        dto.setId(entity.getId());
-        dto.setAddress(entity.getAddress());
-        dto.setFirstName(entity.getFirstName());
-        dto.setLastName(entity.getLastName());
-        dto.setPhoneNumber(entity.getPhoneNumber());
+        dto.setId(employeeentity.getId());
+        dto.setAddress(employeeentity.getAddress());
+        dto.setFirstName(employeeentity.getFirstName());
+        dto.setLastName(employeeentity.getLastName());
+        dto.setPhoneNumber(employeeentity.getPhoneNumber());
 
         List<LeavesDTO> leaveDTOList = new ArrayList<>();
-        if (entity.getLeaves() != null) {
-            for (LeavesEntity leavesEntity : entity.getLeaves()) {
+        if (employeeentity.getLeaves() != null) {
+            for (LeavesEntity leavesEntity : employeeentity.getLeaves()) {
                 LeavesDTO leavesDTO = new LeavesDTO();
                 leavesDTO.setFromDate(leavesEntity.getFromDate());
                 leavesDTO.setTillDate(leavesEntity.getTillDate());
@@ -34,11 +38,9 @@ public class EmployeeMapper {
 
     public static List<EmployeeDTO> toDTOList(List<EmployeeEntity> employeeEntities) {
         List<EmployeeDTO> employeeDTOList = new ArrayList<>();
-        for (EmployeeEntity employeeEntity : employeeEntities) {
-            EmployeeDTO employeeDTO = toDTO(employeeEntity);
-            employeeDTOList.add(employeeDTO);
-        }
-        return employeeDTOList;
+        return employeeEntities.stream()
+                .map(EmployeeMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     public static EmployeeEntity toEntity(EmployeeDTO employeeDTO) {
@@ -63,4 +65,7 @@ public class EmployeeMapper {
         return employeeEntity;
     }
 
+    public EmployeeDTO toDto(Optional<EmployeeEntity> employeeEntity) {
+        return null;
+    }
 }
