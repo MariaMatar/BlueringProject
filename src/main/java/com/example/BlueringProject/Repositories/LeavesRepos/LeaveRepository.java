@@ -14,5 +14,6 @@ import java.util.List;
 public interface LeaveRepository extends JpaRepository<LeaveEntity, Integer> {
     List<LeaveEntity> findByEmployeeIdAndFromDateBetween(Integer employeeId, LocalDate fromDate, LocalDate toDate);
 
-    Page<LeaveEntity> findByLeaveTypeAndEmployeeId(LeaveTypeEntity leaveType, Long employeeId, Pageable pageable);
+    Page<LeaveEntity> findByLeaveTypeAndEmployeeId(LeaveTypeEntity leaveType, Integer employeeId, Pageable pageable);
+
 }

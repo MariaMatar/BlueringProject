@@ -2,10 +2,15 @@ package com.example.BlueringProject.Entities.LeavesEntities;
 
 import com.example.BlueringProject.Entities.EmployeeEntity;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Entity
+@Setter
+@Getter
 @Table(name = "leaves_entity", schema = "internship", catalog = "")
 public class LeaveEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,20 +21,20 @@ public class LeaveEntity {
     @Column(name = "employee_id")
     private Integer employeeId;
     @Basic
-    @Column(name = "end_date")
-    private String endDate;
+    @Column(name = "to_Date")
+    private LocalDate toDate;
     @Basic
     @Column(name = "leave_type")
     private String leaveType;
     @Basic
-    @Column(name = "start_date")
-    private String startDate;
+    @Column(name = "from_date")
+    private LocalDate fromDate;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -41,12 +46,12 @@ public class LeaveEntity {
         this.employeeId = employeeId;
     }
 
-    public String getEndDate() {
-        return endDate;
+    public LocalDate getToDate() {
+        return toDate;
     }
 
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
+    public void setToDate(LocalDate toDate) {
+        this.toDate = toDate;
     }
 
     public String getLeaveType() {
@@ -57,12 +62,12 @@ public class LeaveEntity {
         this.leaveType = leaveType;
     }
 
-    public String getStartDate() {
-        return startDate;
+    public LocalDate getFromDate() {
+        return fromDate;
     }
 
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
+    public void setFromDate(LocalDate fromDate) {
+        this.fromDate = fromDate;
     }
 
     @Override
@@ -72,34 +77,22 @@ public class LeaveEntity {
 
         LeaveEntity that = (LeaveEntity) o;
 
-        if (id != that.id) return false;
-        if (employeeId != null ? !employeeId.equals(that.employeeId) : that.employeeId != null) return false;
-        if (endDate != null ? !endDate.equals(that.endDate) : that.endDate != null) return false;
-        if (leaveType != null ? !leaveType.equals(that.leaveType) : that.leaveType != null) return false;
-        if (startDate != null ? !startDate.equals(that.startDate) : that.startDate != null) return false;
-
-        return true;
+        if (!Objects.equals(id, that.id)) return false;
+        if (!Objects.equals(employeeId, that.employeeId)) return false;
+        if (!Objects.equals(toDate, that.toDate)) return false;
+        if (!Objects.equals(leaveType, that.leaveType)) return false;
+        return Objects.equals(fromDate, that.fromDate);
     }
 
     @Override
     public int hashCode() {
-        int result = id;
-        result = 31 * result + (employeeId != null ? employeeId.hashCode() : 0);
-        result = 31 * result + (endDate != null ? endDate.hashCode() : 0);
-        result = 31 * result + (leaveType != null ? leaveType.hashCode() : 0);
-        result = 31 * result + (startDate != null ? startDate.hashCode() : 0);
-        return result;
+        return Objects.hash(id, employeeId, toDate, leaveType, fromDate);
     }
 
     public void setEmployee(EmployeeEntity employee) {
     }
 
-    public void setFromDate(LocalDate fromDate) {
-    }
-
-    public void setToDate(LocalDate toDate) {
-    }
-
     public void setNote(String note) {
     }
+
 }

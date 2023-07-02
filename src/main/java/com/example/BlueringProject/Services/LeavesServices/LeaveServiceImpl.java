@@ -50,7 +50,7 @@ public class LeaveServiceImpl {
         return leaveRepository.findByEmployeeIdAndFromDateBetween(employeeId, fromDate, toDate);
     }
 
-    public Page<LeaveEntity> getLeavesByTypeAndEmployee(LeaveTypeEntity leaveType, Long employeeId, int page, int size) {
+    public Page<LeaveEntity> getLeavesByTypeAndEmployee(LeaveTypeEntity leaveType, Integer employeeId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return leaveRepository.findByLeaveTypeAndEmployeeId(leaveType, employeeId, pageable);
     }

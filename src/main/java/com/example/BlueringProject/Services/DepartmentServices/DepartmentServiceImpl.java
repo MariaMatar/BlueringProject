@@ -34,9 +34,14 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public DepartmentDTO findDepartmentById(Long id) {
-        DepartmentEntity departmentEntity = departmentRepository.findById((long) id).orElseThrow();
+    public DepartmentDTO findDepartmentById(Integer id) {
+        DepartmentEntity departmentEntity = departmentRepository.findById(id).orElseThrow();
         return DepartmentMapper.DepartmentEntityToDepartmentDTO(departmentEntity);
+    }
+
+    @Override
+    public DepartmentDTO findDepartmentById(Long id) {
+        return null;
     }
 
     @Override
@@ -70,34 +75,54 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public void deleteDepartmentById(int id) {
-        departmentRepository.deleteById((long) id);
+    public ResponseEntity<DepartmentEntity> deleteEntity(int id) throws IllegalAccessException {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<DepartmentDTO> getEntity(int id, Map<String, Object> departmentDTO) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<DepartmentDTO> getAllEntity(int id, Map<String, Object> departmentDTO) {
+        return null;
     }
 
     @Override
     public ResponseEntity<DepartmentEntity> updateEntity(int id, Map<String, Object> departmentDTO) {
-        DepartmentEntity entityToUpdate = departmentRepository.findById((long) id).orElseThrow();
+        return null;
+    }
+
+    @Override
+    public void deleteDepartmentById(int id) {
+        departmentRepository.deleteById(id);
+    }
+
+    @Override
+    public ResponseEntity<DepartmentEntity> updateEntity(Integer id, Map<String, Object> departmentDTO) {
+        DepartmentEntity entityToUpdate = departmentRepository.findById(id).orElseThrow();
         updateEntity(departmentDTO, entityToUpdate, DepartmentEntity.class);
         departmentRepository.saveAndFlush(entityToUpdate);
         return ResponseEntity.ok(entityToUpdate);
     }
 
     @Override
-    public ResponseEntity<DepartmentEntity> deleteEntity(int id) {
-        DepartmentEntity entityToDelete = departmentRepository.findById((long) id).orElseThrow();
+    public ResponseEntity<DepartmentEntity> deleteEntity(Integer id) {
+        DepartmentEntity entityToDelete = departmentRepository.findById(id).orElseThrow();
         departmentRepository.delete(entityToDelete);
         return ResponseEntity.ok(entityToDelete);
     }
 
     @Override
-    public ResponseEntity<DepartmentDTO> getEntity(int id, Map<String, Object> departmentDTO) {
+    public ResponseEntity<DepartmentDTO> getEntity(Integer id, Map<String, Object> departmentDTO) {
         // Implementation code here
         return null;
     }
 
     @Override
-    public ResponseEntity<DepartmentDTO> getAllEntity(int id, Map<String, Object> departmentDTO) {
-        DepartmentEntity entityToGetAll = departmentRepository.findById((long) id).orElseThrow();
+    public ResponseEntity<DepartmentDTO> getAllEntity(Integer id, Map<String, Object> departmentDTO) {
+        DepartmentEntity entityToGetAll = departmentRepository.findById(id).orElseThrow();
         getAllEntity(departmentDTO, entityToGetAll, DepartmentEntity.class);
         departmentRepository.saveAndFlush(entityToGetAll);
         DepartmentDTO departmentDto = DepartmentMapper.DepartmentEntityToDepartmentDTO(entityToGetAll);

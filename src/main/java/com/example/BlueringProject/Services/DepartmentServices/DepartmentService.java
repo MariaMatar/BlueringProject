@@ -12,6 +12,8 @@ public interface DepartmentService {
     static void deleteById(int idValue) {
     }
 
+    DepartmentDTO findDepartmentById(Integer id);
+
     DepartmentDTO findDepartmentById(Long id);
 
     DepartmentDTO create(DepartmentDTO departmentDTO);
@@ -50,6 +52,14 @@ public interface DepartmentService {
     ResponseEntity<DepartmentDTO> getAllEntity(long id, Map<String, Object> departmentDTO);
 
     void createEntity(Map<String, Object> entityDTO, Object entityToCreate, Class entityToCreateClass) throws IllegalAccessException;
+
+    ResponseEntity<DepartmentEntity> updateEntity(Integer id, Map<String, Object> departmentDTO);
+
+    ResponseEntity<DepartmentEntity> deleteEntity(Integer id);
+
+    ResponseEntity<DepartmentDTO> getEntity(Integer id, Map<String, Object> departmentDTO);
+
+    ResponseEntity<DepartmentDTO> getAllEntity(Integer id, Map<String, Object> departmentDTO);
 
     ResponseEntity<DepartmentEntity> createEntity(Map<String, Object> departmentDTO) throws IllegalAccessException;
 

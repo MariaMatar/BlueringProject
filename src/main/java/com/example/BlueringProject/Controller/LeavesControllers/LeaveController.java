@@ -100,15 +100,15 @@ public class LeaveController {
     }
 
     //Retrieve leaves by type and employee (paginated)
-    @GetMapping("/leaves")
-    public Page<LeaveEntity> getLeavesByTypeAndEmployee(
-            @RequestParam("leaveTypeId") Integer leaveTypeId,
-            @RequestParam("employeeId") Integer employeeId,
-            @RequestParam("page") int page,
-            @RequestParam("size") int size) {
-        LeaveTypeEntity leaveType = leaveTypeRepository.getById(leaveTypeId);
-        return leaveService.getLeavesByTypeAndEmployee(leaveType, employeeId, page, size);
-    }
+//    @GetMapping("/leaves")
+//    public Page<LeaveEntity> getLeavesByTypeAndEmployee(
+//            @RequestParam("leaveTypeId") Integer leaveTypeId,
+//            @RequestParam("employeeId") Integer employeeId,
+//            @RequestParam("page") int page,
+//            @RequestParam("size") int size) {
+//        LeaveTypeEntity leaveType = leaveTypeRepository.getById(leaveTypeId);
+//        return leaveService.getLeavesByTypeAndEmployee(leaveType, employeeId, page, size);
+//    }
 }
 
 
