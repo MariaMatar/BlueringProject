@@ -1,33 +1,38 @@
 package com.example.BlueringProject.Controller;
 
+import com.example.BlueringProject.ApiResponse;
 import com.example.BlueringProject.DTO.EmployeeDTO;
 import com.example.BlueringProject.Entities.EmployeeEntity;
+import com.example.BlueringProject.Repositories.DepartmentRepository;
 import com.example.BlueringProject.Repositories.EmployeeRepository;
-import com.example.BlueringProject.Services.EmployeeService;
+import com.example.BlueringProject.Services.EmployeeServices.EmployeeService;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.example.BlueringProject.Mapper.EmployeeMapper;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @CrossOrigin("*")
+@Data
 @RestController
 @RequestMapping("/bluering/api/v1/employees")
-public class EmployeeController {
 
-    @Autowired
-    private EmployeeMapper employeeMapper;
+public class EmployeeController {
 
     @Autowired
     private EmployeeRepository employeeRepository;
 
     private final EmployeeService employeeService;
+    private DepartmentRepository departmentRepository;
+    private ApiResponse response;
 
     public EmployeeController(EmployeeService employeeService) {
+
         this.employeeService = employeeService;
+        this.departmentRepository = departmentRepository;
     }
 
     @GetMapping("/all")
@@ -35,48 +40,44 @@ public class EmployeeController {
         return employeeRepository.findAll();
     }
 
+    @GetMapping("/{id}")
+    public EmployeeDTO getEmployee(@PathVariable int id) {
+
+        return employeeService.findEmployeeById(id);
+    }
 
     @PostMapping
-    public ResponseEntity<String> createEmployee(@RequestBody Map<String, Object> employeeDetails) throws IllegalAccessException {
-        employeeService.createEntity(employeeDetails);
-        return ResponseEntity.ok("Employee informations successfully created");
+    public ApiResponse createEmployee(@RequestBody EmployeeDTO employeeDTO) {
+        EmployeeEntity employee = new EmployeeEntity();
+        employee.setName(employeeDTO.getName());
+        response.setMessage("Employee information CREATED successfully");
+        return (response);
     }
 
-
-    @GetMapping("/{id}")
-    public ResponseEntity<EmployeeDTO> getEmployee(@PathVariable int id) {
-        Optional<EmployeeEntity> employeeEntity = employeeRepository.findById(id);
-        if (employeeEntity != null) {
-            EmployeeDTO employeeDTO = employeeMapper.toDto(employeeEntity);
-            return ResponseEntity.ok(employeeDTO);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-
-    @GetMapping
-    public ResponseEntity<EmployeeDTO> getAllEmployee(@PathVariable int id, @RequestBody Map<String, Object> employeeDetails) {
-        Optional<EmployeeEntity> employeeEntity = employeeRepository.findById(id);
-        if (employeeEntity != null) {
-            EmployeeDTO employeeDTO = employeeMapper.toDto(employeeEntity);
-            return ResponseEntity.ok(employeeDTO);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<String> updateEmployee(@PathVariable int id, @RequestBody Map<String, Object> employeeDetails) {
+    public ApiResponse updateEmployee(@PathVariable int id, @RequestBody Map<String, Object> employeeDetails) {
         employeeService.updateEntity(id, employeeDetails);
-        return ResponseEntity.ok("Employee successfully updated");
+        ApiResponse response = new ApiResponse();
+        response.setMessage("Employee information UPDATED successfully");
+        return (response);
     }
 
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteEmployee(@PathVariable int id) throws IllegalAccessException {
         employeeService.deleteEntity(id);
-        return ResponseEntity.ok("Employee successfully deleted");
+        ApiResponse response = new ApiResponse();
+        response.setMessage("Employee information DELETED successfully");
+        return ResponseEntity.status(HttpStatus.CREATED).body(response.toString());
+    }
+
+
+    //List Employees by Department
+    @GetMapping("/departments/{departmentId}/employees")
+    public List<EmployeeEntity> getEmployeesByDepartment(@PathVariable Integer departmentId) {
+        return employeeService.getEmployeesByDepartment(departmentId);
     }
 }
+
 

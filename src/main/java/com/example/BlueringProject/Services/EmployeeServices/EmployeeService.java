@@ -1,4 +1,4 @@
-package com.example.BlueringProject.Services;
+package com.example.BlueringProject.Services.EmployeeServices;
 
 import com.example.BlueringProject.DTO.EmployeeDTO;
 import com.example.BlueringProject.Entities.EmployeeEntity;
@@ -12,6 +12,8 @@ public interface EmployeeService {
     static void deleteById(Long idValue) {
     }
 
+    EmployeeDTO findEmployeeById(int id);
+
     EmployeeDTO create(EmployeeDTO employeeDTO);
 
     EmployeeDTO update(EmployeeDTO employeeDTO);
@@ -24,15 +26,16 @@ public interface EmployeeService {
 
     ResponseEntity<EmployeeEntity> deleteEntity(int id) throws IllegalAccessException;
 
-    ResponseEntity<EmployeeEntity> getEntity(int id, Map<String, Object> employeeDTO);
+    ResponseEntity<EmployeeDTO> getEntity(int id, Map<String, Object> employeeDTO);
 
-    ResponseEntity<EmployeeEntity> getAllEntity(int id, Map<String, Object> employeeDTO);
+    ResponseEntity<EmployeeDTO> getAllEntity(int id, Map<String, Object> employeeDTO);
 
     ResponseEntity<EmployeeEntity> updateEntity(int id, Map<String, Object> employeeDTO);
 
 
     ResponseEntity<EmployeeEntity> createEntity(Map<String, Object> employeeDTO) throws IllegalAccessException;
 
+    List<EmployeeEntity> getEmployeesByDepartment(Integer departmentId);
 }
 
 

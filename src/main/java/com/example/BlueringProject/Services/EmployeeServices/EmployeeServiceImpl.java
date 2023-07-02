@@ -1,9 +1,9 @@
-package com.example.BlueringProject.Services;
+package com.example.BlueringProject.Services.EmployeeServices;
 
-import com.example.BlueringProject.Entities.EmployeeEntity;
-import com.example.BlueringProject.Repositories.EmployeeRepository;
 import com.example.BlueringProject.DTO.EmployeeDTO;
-import com.example.BlueringProject.Mapper.EmployeeMapper;
+import com.example.BlueringProject.Entities.EmployeeEntity;
+import com.example.BlueringProject.Mapper.EmployeeMapper1;
+import com.example.BlueringProject.Repositories.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.ReflectionUtils;
 import org.springframework.http.HttpStatus;
@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -21,59 +20,45 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeRepository employeeRepository;
 
     @Autowired
+    private EmployeeMapper1 employeeMapper1;
+
     public EmployeeServiceImpl(EmployeeRepository employeeRepository) {
         this.employeeRepository = employeeRepository;
+//        this.employeeMapper1 = employeeMapper1;
     }
 
-    public EmployeeEntity findEmployeeById(int id) {
-        return employeeRepository.findById(Integer.valueOf(Integer.valueOf(id))).orElse(null);
+    @Override
+    public EmployeeDTO findEmployeeById(int id) {
+        return employeeMapper1.EmployeeEntityToEmployeeDTO(employeeRepository.findById(id).get());
     }
 
-    public List<EmployeeEntity> getAllEmployees() {
-        return employeeRepository.findAll();
+    @Override
+    public EmployeeDTO create(EmployeeDTO employeeDTO) {
+        return null;
+    }
+
+    @Override
+    public EmployeeDTO update(EmployeeDTO employeeDTO) {
+        return null;
+    }
+
+    @Override
+    public EmployeeDTO get(int id) {
+        return null;
+    }
+
+    @Override
+    public EmployeeDTO delete(int id) {
+        return null;
+    }
+
+    @Override
+    public List<EmployeeDTO> getAll() {
+        return null;
     }
 
     public void deleteEmployeeById(int id) {
-        employeeRepository.deleteById(Integer.valueOf(Integer.valueOf(id)));
-    }
-
-    public EmployeeDTO create(EmployeeDTO employeeDTO) {
-        EmployeeEntity employeeEntity = EmployeeMapper.toEntity(employeeDTO);
-        EmployeeEntity savedEmployeeEntity = employeeRepository.save(employeeEntity);
-        return EmployeeMapper.toDTO(savedEmployeeEntity);
-    }
-
-    public EmployeeDTO update(EmployeeDTO employeeDTO) {
-        Optional<EmployeeEntity> optionalEmployeeEntity = employeeRepository.findById(employeeDTO.getId());
-        if (optionalEmployeeEntity.isPresent()) {
-            EmployeeEntity employeeEntity = optionalEmployeeEntity.get();
-            employeeEntity.setAddress(employeeDTO.getAddress());
-            employeeEntity.setFirstName(employeeDTO.getFirstName());
-            employeeEntity.setLastName(employeeDTO.getLastName());
-            employeeEntity.setPhoneNumber(employeeDTO.getPhoneNumber());
-            EmployeeEntity updatedEmployeeEntity = employeeRepository.save(employeeEntity);
-            return EmployeeMapper.toDTO(updatedEmployeeEntity);
-        }
-        return null;
-    }
-
-    public EmployeeDTO get(int id) {
-        Optional<EmployeeEntity> optionalEmployeeEntity = employeeRepository.findById(id);
-        if (optionalEmployeeEntity.isPresent()) {
-            EmployeeEntity employeeEntity = optionalEmployeeEntity.get();
-            return EmployeeMapper.toDTO(employeeEntity);
-        }
-        return null;
-    }
-
-    public EmployeeDTO delete(int id) {
         employeeRepository.deleteById(id);
-        return null;
-    }
-
-    public List<EmployeeDTO> getAll() {
-        List<EmployeeEntity> employeeEntities = employeeRepository.findAll();
-        return EmployeeMapper.toDTOList(employeeEntities);
     }
 
     public void updateEntity(Map<String, Object> entityDTO, Object entityToUpdate, Class entityToUpdateClass) {
@@ -98,19 +83,16 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
 
-    public void deleteEntity(Object entityToDelete, Class entityToDeleteClass) throws IllegalAccessException {
-        Field idField = ReflectionUtils.findRequiredField(entityToDeleteClass, "id");
-        idField.setAccessible(true);
-        Object idValue = idField.get(entityToDelete);
-        EmployeeService.deleteById((Long) idValue);
-
-    }
-
     @Override
     public ResponseEntity<EmployeeEntity> deleteEntity(int id) throws IllegalAccessException {
         EmployeeEntity entityToDelete = employeeRepository.findById(id).orElseThrow();
         employeeRepository.delete(entityToDelete);
         return ResponseEntity.ok(entityToDelete);
+    }
+
+    @Override
+    public ResponseEntity<EmployeeDTO> getEntity(int id, Map<String, Object> employeeDTO) {
+        return null;
     }
 
 
@@ -124,15 +106,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         });
 
-    }
-
-    @Override
-    public ResponseEntity<EmployeeEntity> getEntity(int id, Map<String, Object> employeeDTO) {
-        EmployeeEntity entityToGet = employeeRepository.findById(id).orElseThrow();
-        Class entityToGetClass = EmployeeEntity.class;
-        getEntity(employeeDTO, entityToGet, entityToGetClass);
-        employeeRepository.saveAndFlush(entityToGet);
-        return ResponseEntity.ok(entityToGet);
     }
 
 
@@ -149,12 +122,13 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public ResponseEntity<EmployeeEntity> getAllEntity(int id, Map<String, Object> employeeDTO) {
+    public ResponseEntity<EmployeeDTO> getAllEntity(int id, Map<String, Object> employeeDTO) {
         EmployeeEntity entityToGetAll = employeeRepository.findById(id).orElseThrow();
         Class entityToGetAllClass = EmployeeEntity.class;
         getAllEntity(employeeDTO, entityToGetAll, entityToGetAllClass);
         employeeRepository.saveAndFlush(entityToGetAll);
-        return ResponseEntity.ok(entityToGetAll);
+        EmployeeDTO employeeDto = employeeMapper1.EmployeeEntityToEmployeeDTO(entityToGetAll);
+        return ResponseEntity.ok(employeeDto);
     }
 
 
@@ -174,6 +148,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         createEntity(employeeDTO, entityToCreate, entityToCreateClass);
         employeeRepository.saveAndFlush(entityToCreate);
         return ResponseEntity.status(HttpStatus.CREATED).body(entityToCreate);
+    }
+
+    public List<EmployeeEntity> getEmployeesByDepartment(Integer departmentId) {
+        return employeeRepository.findByDepartmentId(departmentId);
     }
 
 }
