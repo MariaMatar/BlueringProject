@@ -9,20 +9,21 @@ import lombok.Data;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
 
-@Data
-public class LeaveServiceImpl {
-    private LeaveRepository leaveRepository;
-    private LeaveTypeRepository leaveTypeRepository;
+@Service
+public class LeaveServiceImpl implements LeaveService {
+    private final LeaveRepository leaveRepository;
+    private final LeaveTypeRepository leaveTypeRepository;
 
-    public void LeaveService(LeaveRepository leaveRepository, LeaveTypeRepository leaveTypeRepository) {
-        this.leaveRepository = leaveRepository;
-        this.leaveTypeRepository = leaveTypeRepository;
-    }
+//    public void LeaveService(LeaveRepository leaveRepository, LeaveTypeRepository leaveTypeRepository) {
+//        this.leaveRepository = leaveRepository;
+//        this.leaveTypeRepository = leaveTypeRepository;
+//    }
 
     public LeaveServiceImpl(LeaveRepository leaveRepository, LeaveTypeRepository leaveTypeRepository) {
         this.leaveRepository = leaveRepository;
@@ -44,6 +45,11 @@ public class LeaveServiceImpl {
         leave.setNote(note);
 
         return leaveRepository.save(leave);
+    }
+
+    @Override
+    public LeaveEntity submitLeaveRequest(Integer employeeId, Integer leaveTypeId, LocalDate fromDate, LocalDate toDate, String note) {
+        return null;
     }
 
     public List<LeaveEntity> getLeavesByEmployeeAndDateRange(Integer employeeId, LocalDate fromDate, LocalDate toDate) {

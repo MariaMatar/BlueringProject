@@ -66,4 +66,3 @@ public interface DepartmentService {
     String getDepartment(Integer id);
 }
 
-

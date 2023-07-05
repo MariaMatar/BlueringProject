@@ -75,6 +75,7 @@
 
 package com.example.BlueringProject.Controller;
 
+import ch.qos.logback.classic.Logger;
 import com.example.BlueringProject.ApiResponse;
 import com.example.BlueringProject.DTO.DepartmentDTO;
 import com.example.BlueringProject.Entities.DepartmentEntity;
@@ -119,8 +120,9 @@ public class DepartmentController {
 
     @GetMapping("/departments/{id}")
     public DepartmentDTO getDepartment(@PathVariable int id) {
-
-        return departmentService.findDepartmentById((long) id);
+        System.out.println("getDepartment");
+        System.out.println(departmentService.findDepartmentById(id));
+        return departmentService.findDepartmentById((int) id);
     }
 
     @PatchMapping("/departments/{id}")

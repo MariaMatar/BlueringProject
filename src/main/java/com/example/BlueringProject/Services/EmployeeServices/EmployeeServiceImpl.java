@@ -154,5 +154,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeRepository.findByDepartmentId(departmentId);
     }
 
+    @Override
+    public EmployeeEntity getAuthenticatedEmployee() {
+        return null;
+    }
+
 }
 

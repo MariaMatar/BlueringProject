@@ -36,6 +36,8 @@ public interface EmployeeService {
     ResponseEntity<EmployeeEntity> createEntity(Map<String, Object> employeeDTO) throws IllegalAccessException;
 
     List<EmployeeEntity> getEmployeesByDepartment(Integer departmentId);
+
+    EmployeeEntity getAuthenticatedEmployee();
 }
 
 

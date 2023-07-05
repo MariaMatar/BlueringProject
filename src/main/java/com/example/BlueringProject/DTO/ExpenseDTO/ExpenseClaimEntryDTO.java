@@ -1,12 +1,21 @@
 package com.example.BlueringProject.DTO.ExpenseDTO;
 
+import lombok.Data;
+
+import java.time.LocalDate;
+
+@Data
 public class ExpenseClaimEntryDTO {
-    int ExpenseClaimEntryId;
-    int ExpenseClaimEntryDate;
-    String ExpenseClaimEntryDescription;
-    int ExpenseClaimEntryTotal;
+    private LocalDate entryDate;
+    private int entryId;
+    private String entryType;
+    private String entryDescription;
+    private int ExpenseClaimId;
+    private int ExpenseTypeId;
+    private String expenseType;
+    private Double total;
 
-    int ExpenseClaimId;
-    int ExpenseTypeId;
-
+//    public LocalDate getTotalAmount() {
+//        return null;
+//    }
 }

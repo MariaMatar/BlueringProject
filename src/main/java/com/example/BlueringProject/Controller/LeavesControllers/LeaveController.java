@@ -24,22 +24,24 @@ import java.util.Map;
 @CrossOrigin("*")
 @Data
 @RestController
-@RequestMapping("/bluering/api/v1/employees")
+@RequestMapping("/bluering/api/v1/leaves")
 
 public class LeaveController {
 
     @Autowired
     private EmployeeRepository employeeRepository;
-    private LeaveService leaveService;
+
+    private final LeaveService leaveService;
+    @Autowired
     private EmployeeService employeeService;
-    private LeaveTypeRepository departmentRepository;
+    @Autowired
+    private LeaveTypeRepository leaveTypeRepository;
     private ApiResponse response;
 
-    public void EmployeeController(EmployeeService employeeService) {
-
-        this.employeeService = employeeService;
-        this.departmentRepository = departmentRepository;
+    public LeaveController(LeaveService leaveService, EmployeeService employeeService) {
         this.leaveService = leaveService;
+        this.employeeService = employeeService;
+        this.response = new ApiResponse();
     }
 
     @GetMapping("/get/leave/all")
@@ -99,16 +101,15 @@ public class LeaveController {
         return leaveService.getLeavesByEmployeeAndDateRange(employeeId, fromDate, toDate);
     }
 
-    //Retrieve leaves by type and employee (paginated)
-//    @GetMapping("/leaves")
-//    public Page<LeaveEntity> getLeavesByTypeAndEmployee(
-//            @RequestParam("leaveTypeId") Integer leaveTypeId,
-//            @RequestParam("employeeId") Integer employeeId,
-//            @RequestParam("page") int page,
-//            @RequestParam("size") int size) {
-//        LeaveTypeEntity leaveType = leaveTypeRepository.getById(leaveTypeId);
-//        return leaveService.getLeavesByTypeAndEmployee(leaveType, employeeId, page, size);
-//    }
+    @GetMapping("/leaves")
+    public Page<LeaveEntity> getLeavesByTypeAndEmployee(
+            @RequestParam("leaveTypeId") Integer leaveTypeId,
+            @RequestParam("employeeId") Integer employeeId,
+            @RequestParam("page") int page,
+            @RequestParam("size") int size) {
+        LeaveTypeEntity leaveType = leaveTypeRepository.getById(leaveTypeId);
+        return leaveService.getLeavesByTypeAndEmployee(leaveType, employeeId, page, size);
+    }
 }
 
 

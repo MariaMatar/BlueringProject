@@ -1,7 +1,11 @@
 package com.example.BlueringProject.DTO.ExpenseDTO;
 
+import lombok.Data;
+
+@Data
 public class ExpenseTypeDTO {
 
-    int ExpenseTypeId;
-    String ExpenseTypeName;
+    private int ExpenseTypeId;
+    private String expenseTypeName;
+
 }

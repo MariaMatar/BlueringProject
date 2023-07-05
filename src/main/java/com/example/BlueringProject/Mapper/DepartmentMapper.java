@@ -15,8 +15,9 @@ public interface DepartmentMapper {
         return null;
     }
 
+    DepartmentDTO EntityToDepartmentDTO(DepartmentEntity cmUserEntity);
+
     DepartmentDTO EmployeeEntityToDepartmentDTO(DepartmentEntity cmUserEntity);
 
     DepartmentEntity departmentDTOToCmUserEntity(DepartmentDTO userDTO);
 }
-
