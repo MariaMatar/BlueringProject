@@ -1,12 +1,13 @@
 package com.example.BlueringProject.Services.ExpenseServices;
 
 import com.example.BlueringProject.DTO.ExpenseDTO.ExpenseClaimEntryDTO;
-import com.example.BlueringProject.Entities.ExpensesClaims.ExpenseClaimEntryEntity;
+import com.example.BlueringProject.Entities.ExpenseTypeEntityEntity;
 import com.example.BlueringProject.Repositories.ExpenseRepos.ExpenseClaimEntryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -45,7 +46,12 @@ public class ExpenseClaimEntryServiceImpl implements ExpenseClaimEntryService {
     }
 
     @Override
-    public ResponseEntity<ExpenseClaimEntryEntity> deleteEntity(int id) throws IllegalAccessException {
+    public List<ExpenseClaimEntryDTO> getExpenseClaimEntriesByClaimId(Integer expenseClaimId) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<ExpenseTypeEntityEntity> deleteEntity(int id) throws IllegalAccessException {
         // Implement the logic to delete an expense claim entry entity by ID
         return null;
     }
@@ -63,7 +69,7 @@ public class ExpenseClaimEntryServiceImpl implements ExpenseClaimEntryService {
     }
 
     @Override
-    public ResponseEntity<ExpenseClaimEntryEntity> updateEntity(int id, Map<String, Object> expenseClaimEntryDTO) {
+    public ResponseEntity<ExpenseTypeEntityEntity> updateEntity(int id, Map<String, Object> expenseClaimEntryDTO) {
         // Implement the logic to update an expense claim entry entity
         return null;
     }

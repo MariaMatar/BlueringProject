@@ -1,7 +1,7 @@
 package com.example.BlueringProject.Services.ExpenseServices;
 
 import com.example.BlueringProject.DTO.ExpenseDTO.ExpenseClaimDTO;
-import com.example.BlueringProject.Entities.ExpensesClaims.ExpenseClaimEntity;
+import com.example.BlueringProject.Entities.ExpenseClaimEntityEntity;
 import com.example.BlueringProject.Repositories.ExpenseRepos.ExpenseClaimRepository;
 import org.springframework.http.ResponseEntity;
 
@@ -18,22 +18,25 @@ public interface ExpenseClaimService {
 
     ExpenseClaimDTO create(ExpenseClaimDTO expenseClaimDTO);
 
+
     ExpenseClaimDTO update(ExpenseClaimDTO expenseClaimDTO);
 
     ExpenseClaimDTO get(int id);
 
     ExpenseClaimDTO delete(int id);
 
-    ResponseEntity<ExpenseClaimEntity> deleteEntity(int id) throws IllegalAccessException;
+    ResponseEntity<ExpenseClaimEntityEntity> deleteEntity(int id) throws IllegalAccessException;
 
     ResponseEntity<ExpenseClaimDTO> getEntity(int id, Map<String, Object> expenseClaimDTO);
 
     ResponseEntity<ExpenseClaimDTO> getAllEntity(int id, Map<String, Object> expenseClaimDTO);
 
-    ResponseEntity<ExpenseClaimEntity> updateEntity(int id, Map<String, Object> expenseClaimDTO);
+    ResponseEntity<ExpenseClaimEntityEntity> updateEntity(int id, Map<String, Object> expenseClaimDTO);
 
-    List<ExpenseClaimEntity> expenseClaims = expenseClaimRepository.findByEmployeeId(employeeId);
+//    List<ExpenseClaimEntityEntity> expenseClaims = expenseClaimRepository.findByEmployeeId(employeeId);
 
-    void saveExpenseClaimEntity(ExpenseClaimEntity expenseClaim);
+    void saveExpenseClaimEntity(ExpenseClaimEntityEntity expenseClaim);
+
+    List<ExpenseClaimEntityEntity> getAllExpenseClaims();
 }
 

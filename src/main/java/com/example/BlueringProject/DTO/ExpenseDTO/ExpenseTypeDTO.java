@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class ExpenseTypeDTO {
 
-    private int ExpenseTypeId;
+    private Integer ExpenseTypeId;
     private String expenseTypeName;
 
 }

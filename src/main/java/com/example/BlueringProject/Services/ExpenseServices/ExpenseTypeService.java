@@ -1,8 +1,10 @@
 package com.example.BlueringProject.Services.ExpenseServices;
 
 import com.example.BlueringProject.DTO.ExpenseDTO.ExpenseTypeDTO;
-import com.example.BlueringProject.Entities.ExpensesClaims.ExpenseTypeEntity;
+import com.example.BlueringProject.Entities.ExpenseTypeEntityEntity;
 import org.springframework.http.ResponseEntity;
+
+import java.util.List;
 
 public interface ExpenseTypeService {
 
@@ -14,8 +16,12 @@ public interface ExpenseTypeService {
 
     ExpenseTypeDTO delete(int id);
 
-    ResponseEntity<ExpenseTypeEntity> deleteEntity(int id) throws IllegalAccessException;
+    ResponseEntity<ExpenseTypeEntityEntity> deleteEntity(int id) throws IllegalAccessException;
 
 
-    ExpenseTypeEntity createExpenseType(ExpenseTypeEntity expenseType);
+    ExpenseTypeEntityEntity createExpenseType(ExpenseTypeEntityEntity expenseType);
+
+    String getExpenseTypeNameById(Long expenseTypeId);
+
+    List<ExpenseTypeEntityEntity> getAllExpenseTypes();
 }

@@ -2,10 +2,10 @@ package com.example.BlueringProject.Controller;
 
 import com.example.BlueringProject.ApiResponse;
 import com.example.BlueringProject.DTO.ExpenseDTO.ExpenseClaimDTO;
-import com.example.BlueringProject.Entities.EmployeeEntity;
-import com.example.BlueringProject.Entities.ExpensesClaims.ExpenseClaimEntity;
-import com.example.BlueringProject.Entities.ExpensesClaims.ExpenseClaimEntryEntity;
-import com.example.BlueringProject.Entities.ExpensesClaims.ExpenseTypeEntity;
+import com.example.BlueringProject.DTO.ExpenseDTO.ExpenseClaimEntryDTO;
+import com.example.BlueringProject.DTO.ExpenseDTO.ExpenseTypeDTO;
+import com.example.BlueringProject.Entities.ExpenseClaimEntityEntity;
+import com.example.BlueringProject.Entities.ExpenseTypeEntityEntity;
 import com.example.BlueringProject.Repositories.DepartmentRepository;
 import com.example.BlueringProject.Repositories.ExpenseRepos.ExpenseClaimEntryRepository;
 import com.example.BlueringProject.Repositories.ExpenseRepos.ExpenseClaimRepository;
@@ -19,11 +19,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 
 @RestController
 @RequestMapping("bluering/api/v1/expenses")
@@ -31,7 +30,9 @@ public class ExpensesController {
     private final ExpenseClaimService expenseClaimService;
     private final ExpenseTypeService expenseTypeService;
     private ExpenseClaimEntryService expenseClaimEntryService;
+
     public ApiResponse response;
+
     @Autowired
     private ExpenseTypeRepository expenseTypeRepository;
 
@@ -48,12 +49,19 @@ public class ExpensesController {
     private DepartmentRepository departmentRepository;
 
     @Autowired
-    public ExpensesController(ExpenseClaimService expenseClaimService, ExpenseTypeService expenseTypeService) {
+    public ExpensesController(
+            ExpenseClaimService expenseClaimService,
+            ExpenseTypeService expenseTypeService
+    ) {
         this.expenseClaimService = expenseClaimService;
         this.expenseTypeService = expenseTypeService;
     }
 
-    public ExpensesController(ExpenseClaimService expenseClaimService, ExpenseTypeService expenseTypeService, ExpenseClaimEntryService expenseClaimEntryService) {
+    public ExpensesController(
+            ExpenseClaimService expenseClaimService,
+            ExpenseTypeService expenseTypeService,
+            ExpenseClaimEntryService expenseClaimEntryService
+    ) {
         this.expenseClaimService = expenseClaimService;
         this.expenseTypeService = expenseTypeService;
         this.expenseClaimEntryService = expenseClaimEntryService;
@@ -61,43 +69,56 @@ public class ExpensesController {
 
     // Define expense claim types
     @PostMapping("/expense-types")
-    public ExpenseTypeEntity createExpenseType(@RequestBody ExpenseTypeEntity expenseType) {
-        return expenseTypeRepository.save(expenseType);
+    public ExpenseTypeEntityEntity createExpenseType(@RequestBody ExpenseTypeEntityEntity expenseTypeEntity) {
+        return expenseTypeRepository.save(expenseTypeEntity);
     }
 
     // Submit the expense
     @PostMapping("/submit-expense")
     public ApiResponse submitExpense(@RequestBody ExpenseClaimDTO expenseClaimDTO) {
-        ExpenseClaimEntity expenseClaim = new ExpenseClaimEntity();
-        expenseClaim.setExpenseClaimDate(LocalDate.now());
-        expenseClaim.setDescription(expenseClaimDTO.getDescription());
-        expenseClaim.setExpenseClaimTotal(expenseClaimDTO.getTotal()); // Total amount
+        ExpenseClaimEntityEntity expenseClaimEntity = new ExpenseClaimEntityEntity();
+        expenseClaimEntity.setExpenseClaimDate((java.sql.Date) new Date(System.currentTimeMillis()));
+//        expenseClaimEntity.setDescription(expenseClaimEntryDTO.getDescription());
+//        expenseClaimEntity.setExpenseClaimTotal(expenseClaimDTO.getTotal()); // Total amount
 
         // Save the expense claim entity
-        expenseClaimService.saveExpenseClaimEntity(expenseClaim);
+        expenseClaimService.saveExpenseClaimEntity(expenseClaimEntity);
         response.setMessage("Expense claim submitted successfully");
-        return (response);
+        return response;
     }
 
-    // Get total claims per type per employee
+    // Get total claims of each type per employee
     @GetMapping("/total-claims")
     public ResponseEntity<Map<String, Map<String, BigDecimal>>> getTotalClaimsPerTypePerEmployee() {
-        List<ExpenseClaimEntity> expenseClaims = expenseClaimRepository.findAll();
+        List<ExpenseClaimEntityEntity> expenseClaims = expenseClaimService.getAllExpenseClaims();
+        List<ExpenseTypeEntityEntity> expenseTypes = expenseTypeService.getAllExpenseTypes();
+
         Map<String, Map<String, BigDecimal>> totalClaimsData = new HashMap<>();
 
-        for (ExpenseClaimEntity expenseClaimEntity : expenseClaims) {
-            String employeeId = expenseClaimEntity.getEmployeeId().toString();
+        for (ExpenseClaimEntityEntity expenseClaim : expenseClaims) {
+            String employeeId = expenseClaim.getEmployeeId().toString();
             Map<String, BigDecimal> claimsPerType = totalClaimsData.computeIfAbsent(employeeId, k -> new HashMap<>());
 
-            List<ExpenseClaimEntryEntity> entries = expenseClaimEntryRepository.findByExpenseClaimEntity(expenseClaimEntity);
-            for (ExpenseClaimEntryEntity entry : entries) {
-                String expenseTypeName = entry.getExpenseType().getExpenseTypeName();
-                BigDecimal totalAmount = entry.getTotal();
+            List<ExpenseClaimEntryDTO> entries = expenseClaimEntryService.getExpenseClaimEntriesByClaimId(expenseClaim.getExpenseClaimId());
+            for (ExpenseClaimEntryDTO entry : entries) {
+                String expenseTypeId = String.valueOf(entry.getExpenseTypeId());
+                String expenseTypeName = getExpenseTypeNameById(expenseTypes, expenseTypeId);
+//                BigDecimal totalAmount = entry.getExpenseClaimEntryTotal();
 
-                claimsPerType.put(expenseTypeName, claimsPerType.getOrDefault(expenseTypeName, BigDecimal.ZERO).add(totalAmount));
-
+//                claimsPerType.put(expenseTypeName, claimsPerType.getOrDefault(expenseTypeName, BigDecimal.ZERO).add(totalAmount));
             }
         }
         return ResponseEntity.ok(totalClaimsData);
     }
+
+    // Utility method to get the expense type name based on the expenseTypeId
+    private String getExpenseTypeNameById(List<ExpenseTypeEntityEntity> expenseTypes, String expenseTypeId) {
+        for (ExpenseTypeEntityEntity expenseType : expenseTypes) {
+            if (String.valueOf(expenseType.getExpenseTypeId()).equals(expenseTypeId)) {
+                return expenseType.getExpenseTypeName();
+            }
+        }
+        return "";
+    }
 }
+

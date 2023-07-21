@@ -1,13 +1,14 @@
-package com.example.BlueringProject.Services.EmployeeServices;
+package com.example.BlueringProject.Services.ExpenseServices;
 
 import com.example.BlueringProject.DTO.ExpenseDTO.ExpenseTypeDTO;
-import com.example.BlueringProject.Entities.ExpensesClaims.ExpenseTypeEntity;
+import com.example.BlueringProject.Entities.ExpenseTypeEntityEntity;
 import com.example.BlueringProject.Repositories.EmployeeRepository;
 import com.example.BlueringProject.Repositories.ExpenseRepos.ExpenseTypeRepository;
-import com.example.BlueringProject.Services.ExpenseServices.ExpenseTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ExpenseTypeServiceImpl implements ExpenseTypeService {
@@ -20,8 +21,8 @@ public class ExpenseTypeServiceImpl implements ExpenseTypeService {
 
     @Override
     public ExpenseTypeDTO create(ExpenseTypeDTO expenseTypeDTO) {
-        ExpenseTypeEntity expenseTypeEntity = new ExpenseTypeEntity();
-        ExpenseTypeEntity savedExpenseTypeEntity = expenseTypeRepository.save(expenseTypeEntity);
+        ExpenseTypeEntityEntity expenseTypeEntity = new ExpenseTypeEntityEntity();
+        ExpenseTypeEntityEntity savedExpenseTypeEntity = expenseTypeRepository.save(expenseTypeEntity);
         ExpenseTypeDTO savedExpenseTypeDTO = new ExpenseTypeDTO();
         return savedExpenseTypeDTO;
     }
@@ -43,7 +44,7 @@ public class ExpenseTypeServiceImpl implements ExpenseTypeService {
     }
 
     @Override
-    public ResponseEntity<ExpenseTypeEntity> deleteEntity(int id) throws IllegalAccessException {
+    public ResponseEntity<ExpenseTypeEntityEntity> deleteEntity(int id) throws IllegalAccessException {
         return null;
     }
 
@@ -53,7 +54,17 @@ public class ExpenseTypeServiceImpl implements ExpenseTypeService {
     }
 
     @Override
-    public ExpenseTypeEntity createExpenseType(ExpenseTypeEntity expenseType) {
+    public ExpenseTypeEntityEntity createExpenseType(ExpenseTypeEntityEntity expenseType) {
         return expenseTypeRepository.save(expenseType);
+    }
+
+    @Override
+    public String getExpenseTypeNameById(Long expenseTypeId) {
+        return null;
+    }
+
+    @Override
+    public List<ExpenseTypeEntityEntity> getAllExpenseTypes() {
+        return null;
     }
 }
